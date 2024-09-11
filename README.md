@@ -12,3 +12,13 @@ db.js: Configures the MongoDB connection.
 user.js: Defines the user schema for MongoDB.
 Routers:
 authRouter.js: Manages authentication routes (login/signup).
+
+Backend Setup
+Navigate to the backend directory:
+cd backend
+
+npm install
+
+MONGO_URI=your_mongodb_uri JWT_SECRET=your_jwt_secret
+
+npm start
