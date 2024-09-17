@@ -1,32 +1,70 @@
+import { upload } from "../Middlewares/uploadMiddleware.js" 
 import jwt from "jsonwebtoken"
 import userModel from "../Models/user.js"
 import bcrypt from "bcrypt"
 
 
-export const signup = async(req, res) => {
-try{
-const {name, email, password} = req.body
-const user =  await userModel.findOne({email})
-if(user){
-    return res.status(409)
-    .json({message: 'user already exists', success: false})
-}
-const Model= new userModel({name, email, password})
- Model.password = await bcrypt.hash(password, 10)
- await Model.save()
- res.status(201).json({
-    message: 'signup successfully',
-    success: true
- })
+// export const signup = async(req, res) => {
+// try{
+// const {name, email, password, phone} = req.body
+// const user =  await userModel.findOne({email})
+// if(user){
+//     return res.status(409)
+//     .json({message: 'user already exists', success: false})
+// }
+// const Model= new userModel({name, email, password, phone})
+//  Model.password = await bcrypt.hash(password, 10)
+//  await Model.save()
+//  res.status(201).json({
+//     message: 'signup successfully',
+//     success: true
+//  })
 
-}catch(err){
-    res.status(500).json({
-        message: 'signup failed',
+// }catch(err){
+//     res.status(500).json({
+//         message: 'signup failed',
+//         success: false
+//      })
+// }
+
+// }
+export const signup = async (req, res) => {
+  try {
+    const { name, email, password, phone } = req.body;
+    const user = await userModel.findOne({ email });
+
+    if (user) {
+      return res.status(409).json({
+        message: 'User already exists',
         success: false
-     })
-}
+      });
+    }
 
-}
+    const profilePhoto = req.file ? req.file.path : null;  // Add file path if uploaded
+
+    const newUser = new userModel({
+      name,
+      email,
+      password,
+      phone,
+      profilePhoto
+    });
+
+    newUser.password = await bcrypt.hash(password, 10);
+    await newUser.save();
+
+    res.status(201).json({
+      message: 'Signup successful',
+      success: true
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: 'Signup failed',
+      success: false
+    });
+  }
+};
+
 
 export const login = async(req, res) => {
     try{
@@ -103,3 +141,4 @@ export const login = async(req, res) => {
           });
         }
       }; 
+
