@@ -5,7 +5,7 @@ import { upload } from "../Middlewares/uploadMiddleware.js"
 const router= express.Router()
 
 
-router.post('/signup', signupValidation,upload.single('profilePhoto') ,signup)
+router.post('/signup',upload.single('profilePhoto') ,signup)
 router.post('/login', loginValidation, login)
 router.get('/user/:email', getUserInfo);
 
