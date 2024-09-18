@@ -146,7 +146,7 @@ export const login = async(req, res) => {
       export const updateUser = async (req, res) => {
         try {
           const { userId } = req.params;
-          const { name, email, password, phone } = req.body;
+          // const { name, email, password, phone } = req.body;
       
           const user = await userModel.findById(userId);
       
@@ -154,16 +154,9 @@ export const login = async(req, res) => {
             return res.status(404).json({ message: "User not found", success: false });
           }
       
-          // Update user fields if provided
-          if (name) user.name = name;
-          if (email) user.email = email;
-          if (phone) user.phone = phone;
-          if (password) user.password = await bcrypt.hash(password, 10);
-      
-          // If a new profile photo is uploaded
-       
-      
-          await user.save();
+         
+
+          const update = await userModel.findOneAndUpdate({ _id: userId }, req.body );
       
           res.status(200).json({ message: "User updated successfully", success: true });
         } catch (error) {
@@ -183,9 +176,7 @@ export const login = async(req, res) => {
           }
       
           // Remove the user's profile photo if it exists
-          if (user.profilePhoto) {
-            fs.unlinkSync(path.resolve(user.profilePhoto)); // Delete profile photo from the server
-          }
+         
       
           await userModel.findByIdAndDelete(userId); // Delete user from database
       
