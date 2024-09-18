@@ -40,14 +40,14 @@ export const signup = async (req, res) => {
       });
     }
 
-    const profilePhoto = req.file ? req.file.path : null;  // Add file path if uploaded
+    
 
     const newUser = new userModel({
       name,
       email,
       password,
       phone,
-      profilePhoto
+      
     });
 
     newUser.password = await bcrypt.hash(password, 10);
@@ -70,6 +70,8 @@ export const login = async(req, res) => {
     try{
     const {email, password} = req.body
     const user =  await userModel.findOne({email})
+    
+    
     const errMsg= 'auth failed no user found'
     if(!user){
         return res.status(403)
@@ -157,6 +159,7 @@ export const login = async(req, res) => {
          
 
           const update = await userModel.findOneAndUpdate({ _id: userId }, req.body );
+      console.log(userId);
       
           res.status(200).json({ message: "User updated successfully", success: true });
         } catch (error) {
@@ -164,7 +167,7 @@ export const login = async(req, res) => {
         }
       };
       
-      // Delete user and their profile photo
+      // Delete user 
       export const deleteUser = async (req, res) => {
         try {
           const { userId } = req.params;
