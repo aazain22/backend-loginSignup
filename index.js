@@ -24,6 +24,7 @@ res.send('PONG')
 
 
 //middlewares
+app.set("trust proxy", 1);
 app.use(express.json())
 app.use(bodyParser.json())
 app.use(cors())
