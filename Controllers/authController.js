@@ -142,3 +142,62 @@ export const login = async(req, res) => {
         }
       }; 
 
+
+      export const updateUser = async (req, res) => {
+        try {
+          const { userId } = req.params;
+          const { name, email, password, phone } = req.body;
+      
+          const user = await userModel.findById(userId);
+      
+          if (!user) {
+            return res.status(404).json({ message: "User not found", success: false });
+          }
+      
+          // Update user fields if provided
+          if (name) user.name = name;
+          if (email) user.email = email;
+          if (phone) user.phone = phone;
+          if (password) user.password = await bcrypt.hash(password, 10);
+      
+          // If a new profile photo is uploaded
+          if (req.file) {
+            // Remove old profile photo if it exists
+            if (user.profilePhoto) {
+              fs.unlinkSync(path.resolve(user.profilePhoto)); // Delete old photo from the server
+            }
+            user.profilePhoto = req.file.path; // Save new photo path
+          }
+      
+          await user.save();
+      
+          res.status(200).json({ message: "User updated successfully", success: true });
+        } catch (error) {
+          res.status(500).json({ message: "Failed to update user", success: false });
+        }
+      };
+      
+      // Delete user and their profile photo
+      export const deleteUser = async (req, res) => {
+        try {
+          const { userId } = req.params;
+      
+          const user = await userModel.findById(userId);
+      
+          if (!user) {
+            return res.status(404).json({ message: "User not found", success: false });
+          }
+      
+          // Remove the user's profile photo if it exists
+          if (user.profilePhoto) {
+            fs.unlinkSync(path.resolve(user.profilePhoto)); // Delete profile photo from the server
+          }
+      
+          await userModel.findByIdAndDelete(userId); // Delete user from database
+      
+          res.status(200).json({ message: "User deleted successfully", success: true });
+        } catch (error) {
+          res.status(500).json({ message: "Failed to delete user", success: false });
+        }
+      };
+
