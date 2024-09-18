@@ -161,13 +161,7 @@ export const login = async(req, res) => {
           if (password) user.password = await bcrypt.hash(password, 10);
       
           // If a new profile photo is uploaded
-          if (req.file) {
-            // Remove old profile photo if it exists
-            if (user.profilePhoto) {
-              fs.unlinkSync(path.resolve(user.profilePhoto)); // Delete old photo from the server
-            }
-            user.profilePhoto = req.file.path; // Save new photo path
-          }
+       
       
           await user.save();
       
