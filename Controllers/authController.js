@@ -94,6 +94,8 @@ export const login = async(req, res) => {
         email,
        name: user.name
      })
+
+     await user.save();
     
     }catch(err){
         res.status(500).json({
@@ -146,25 +148,43 @@ export const login = async(req, res) => {
 
 
       export const updateUser = async (req, res) => {
-        try {
-          const { userId } = req.params;
-          // const { name, email, password, phone } = req.body;
+      //   try {
+      // //     const { userId } = req.params;
+      // //     // const { name, email, password, phone } = req.body;
       
-          const user = await userModel.findById(userId);
+      // //     const user = await userModel.findById(userId);
       
-          if (!user) {
-            return res.status(404).json({ message: "User not found", success: false });
-          }
+      // //     if (!user) {
+      // //       return res.status(404).json({ message: "User not found", success: false });
+      // //     }
       
          
 
-          const update = await userModel.findOneAndUpdate({ _id: userId }, req.body );
-      console.log(userId);
+      // //     const update = await userModel.findOneAndUpdate({ _id: userId }, req.body );
+      // // console.log(userId);
       
-          res.status(200).json({ message: "User updated successfully", success: true });
-        } catch (error) {
-          res.status(500).json({ message: "Failed to update user", success: false });
-        }
+      // //     res.status(200).json({ message: "User updated successfully", success: true });
+      // //   } catch (error) {
+      // //     res.status(500).json({ message: "Failed to update user", success: false });
+      //    }
+      const { name, email, password, phone, userId } = req.body;
+      // if (!name || !email || !lastname || !location) {
+      //   next("Please Provide All Fields");
+      // }
+      const user = await userModel.findOne({ _id: userId });
+      user.name = name;
+      user.email = email;
+      user.password = password;
+      user.phone = phone;
+    
+      await user.save();
+      const token = user.createJWT();
+      res.status(200).json({
+        user,
+        token,
+      });
+
+
       };
       
       // Delete user 
