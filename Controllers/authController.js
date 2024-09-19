@@ -77,8 +77,8 @@ export const login = async(req, res) => {
         return res.status(403)
         .json({message: errMsg, success: false})
     }
-   const isPassEqual= await bcrypt.compare(password, user.password)
-   if(!isPassEqual){
+  //  const isPassEqual= await bcrypt.compare(password, user.password)
+   if(password !== user.password){
     return res.status(403)
         .json({message: errMsg, 
             success: false})
@@ -95,7 +95,7 @@ export const login = async(req, res) => {
        name: user.name
      })
 
-     await user.save();
+    
     
     }catch(err){
         res.status(500).json({
@@ -150,7 +150,7 @@ export const login = async(req, res) => {
       export const updateUser = async (req, res) => {
         try {
           const { userId } = req.params;
-          const { name, email, password, phone } = req.body;
+          // const { name, email, password, phone } = req.body;
       
           const user = await userModel.findById(userId);
       
