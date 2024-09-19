@@ -135,6 +135,7 @@ export const login = async(req, res) => {
             data: {
               email: user.email,
               name: user.name,
+              phone: user.phone,
               _id: user._id
             }
           });
