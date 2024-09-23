@@ -1,33 +1,9 @@
-import { upload } from "../Middlewares/uploadMiddleware.js" 
+
 import jwt from "jsonwebtoken"
 import userModel from "../Models/user.js"
 import bcrypt from "bcrypt"
 
 
-// export const signup = async(req, res) => {
-// try{
-// const {name, email, password, phone} = req.body
-// const user =  await userModel.findOne({email})
-// if(user){
-//     return res.status(409)
-//     .json({message: 'user already exists', success: false})
-// }
-// const Model= new userModel({name, email, password, phone})
-//  Model.password = await bcrypt.hash(password, 10)
-//  await Model.save()
-//  res.status(201).json({
-//     message: 'signup successfully',
-//     success: true
-//  })
-
-// }catch(err){
-//     res.status(500).json({
-//         message: 'signup failed',
-//         success: false
-//      })
-// }
-
-// }
 export const signup = async (req, res) => {
   try {
     const { name, email, password, phone } = req.body;
@@ -69,6 +45,8 @@ export const signup = async (req, res) => {
 export const login = async(req, res) => {
     try{
     const {email, password} = req.body
+    console.log('email received',email);
+    
     const user =  await userModel.findOne({email})
     
     
@@ -77,7 +55,7 @@ export const login = async(req, res) => {
         return res.status(403)
         .json({message: errMsg, success: false})
     }
-  //  const isPassEqual= await bcrypt.compare(password, user.password)
+ 
    if(password !== user.password){
     return res.status(403)
         .json({message: errMsg, 
